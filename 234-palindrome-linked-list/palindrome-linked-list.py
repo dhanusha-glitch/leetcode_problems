@@ -1,10 +1,14 @@
 class Solution:
     def isPalindrome(self, head: Optional[ListNode]) -> bool:
-        ls = []
-        while head != None:
-            ls.append(head.val)
-            head = head.next
-        if ls == ls[::-1]:
-            return True
-        else: 
-            return False
+        global front
+        front = head
+        def helper(back) -> bool:
+            global front
+            if not back:
+                return True
+            equal_so_far = helper(back.next)
+            value_equal = (front.val == back.val)
+            front = front.next
+            return equal_so_far and value_equal
+        
+        return helper(head)
