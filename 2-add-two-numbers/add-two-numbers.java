@@ -1,13 +1,11 @@
 class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode dummy = new ListNode(0); // creating an dummy list
-        ListNode curr = dummy; // intialising an pointer
-        int carry = 0; // intialising our carry with 0 intiall
-        // while loop will run, until l1 OR l2 not reaches null OR if they both reaches null. But our carry has some value in it. 
-		// We will add that as well into our list
+        ListNode dummy = new ListNode(0); 
+        ListNode curr = dummy; 
+        int carry = 0; 
         while(l1 != null || l2 != null || carry == 1){
-            int sum = 0; // intialising our sum
-            if(l1 != null){ // adding l1 to our sum & moving l1
+            int sum = 0; 
+            if(l1 != null){ 
                 sum += l1.val;
                 l1 = l1.next;
             }
