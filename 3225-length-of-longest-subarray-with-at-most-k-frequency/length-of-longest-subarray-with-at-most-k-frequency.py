@@ -1,14 +1,17 @@
-class Solution:
-    def maxSubarrayLength(self, nums: List[int], k: int) -> int:
-        i = j = 0
-        n = len(nums)
-        ans = 1
-        map = {}
-        while i < n:
-            map[nums[i]] = map.get(nums[i], 0) + 1
-            while map[nums[i]] > k:
-                map[nums[j]] -= 1
-                j += 1
-            ans = max(ans, i - j + 1)
-            i += 1
-        return ans
+class Solution(object):
+    def maxSubarrayLength(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """       
+        n, left, result = len(nums), 0, 0
+        freq = defaultdict(int)
+
+        for right in range(n):
+            freq[nums[right]] += 1  
+            while freq[nums[right]] > k:
+                freq[nums[left]] -= 1 
+                left += 1
+            result = max(result, right - left + 1)
+        return result
