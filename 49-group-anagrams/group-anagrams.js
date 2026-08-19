@@ -1,6 +1,5 @@
 var groupAnagrams = function(strs) {
     let ans = {};
-
     for (let s of strs) {
         let key = s.split('').sort().join('');
         if (!ans[key]) {
@@ -8,6 +7,5 @@ var groupAnagrams = function(strs) {
         }
         ans[key].push(s);
     }
-
     return Object.values(ans);    
 };
