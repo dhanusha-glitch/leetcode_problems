@@ -1,11 +1,13 @@
 class Solution:
     def stoneGameVIII(self, A: List[int]) -> int:
         n = len(A)
-        s = list(accumulate(A))
+        for i in range(1, n):
+            A[i] += A[i - 1]
 
-        @cache
-        def maxDiff(i):
-            if i == n - 1: return s[n - 1]
-            return max(maxDiff(i + 1), s[i] - maxDiff(i + 1))
+        ans = A[-1]
+        for i in range(n - 2, 0, -1):
+            ans = max(ans, A[i] - ans)
 
-        return maxDiff(1)
+        return ans
+
+        
