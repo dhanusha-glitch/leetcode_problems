@@ -6,6 +6,5 @@ class Solution(object):
         root = TreeNode(root_val)
         inorder_index = inorder.index(root_val)
         root.right = self.buildTree(inorder[inorder_index+1:], postorder)
-        root.left = self.buildTree(inorder[:inorder_index], postorder)
-        
+        root.left = self.buildTree(inorder[:inorder_index], postorder)        
         return root
