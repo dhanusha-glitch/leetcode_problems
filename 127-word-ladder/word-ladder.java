@@ -7,10 +7,8 @@ class Solution {
         queue.add(beginWord);
         
         Set<String> visited = new HashSet<>();
-        queue.add(beginWord);
-        
-        int changes = 1;
-        
+        queue.add(beginWord);        
+        int changes = 1;      
         while(!queue.isEmpty()){
             int size = queue.size();
             for(int i = 0; i < size; i++){
