@@ -1,13 +1,11 @@
 class Solution:
     def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
         depthMap = {}
-        ans = []
-        
+        ans = []       
         def dfs(word, seq):
             if word == beginWord:
                 ans.append(seq[::-1])
-                return
-            
+                return          
             steps = depthMap[word]
             for i in range(len(word)):
                 original = word[i]
@@ -18,12 +16,10 @@ class Solution:
                         dfs(word, seq)
                         seq.pop()
                 word = word[:i] + original + word[i+1:]
-
         wordSet = set(wordList)
         q = deque([beginWord])
         depthMap[beginWord] = 1
-        wordSet.discard(beginWord) 
-        
+        wordSet.discard(beginWord)       
         while q:
             word = q.popleft()
             steps = depthMap[word]
@@ -37,12 +33,9 @@ class Solution:
                         q.append(word)
                         wordSet.discard(word)
                         depthMap[word] = steps + 1  
-                word = word[:i] + original + word[i+1:] 
-        
-
+                word = word[:i] + original + word[i+1:]        
         if endWord in depthMap:
             seq = [endWord]
-            dfs(endWord, seq)
-        
+            dfs(endWord, seq)       
         return ans
 
