@@ -10,6 +10,5 @@ var majorityElement = function(nums) {
             majority = hash[n];
         }
     }
-
     return res;    
 };
