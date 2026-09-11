@@ -3,7 +3,6 @@ public:
     int totalNumbers(vector<int>& digits) {
         unordered_set<int> seen;
         int n = digits.size();
-
         for(int h = 0; h < n; h++){
             if (digits[h] == 0) continue;
             for(int t = 0; t < n; t++){
@@ -17,7 +16,6 @@ public:
                 }
             }
         }
-
         return seen.size();
     }
 };
