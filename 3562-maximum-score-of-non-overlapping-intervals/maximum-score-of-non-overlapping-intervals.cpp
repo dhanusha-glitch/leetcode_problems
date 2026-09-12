@@ -1,52 +1,82 @@
 class Solution {
-    struct IntervalData {
-        int end, start, weight, originalIndex;
-        // Used for sorting and lower_bound comparisons
-        bool operator<(const IntervalData& other) const {
-            return end < other.end;
-        }
+public:
+    struct Node {
+        long long score;
+        vector<int> ids;
+        bool valid;
+
+        Node() : score(0), valid(false) {}
+        Node(long long s, vector<int> v) : score(s), ids(std::move(v)), valid(true) {}
     };
 
-public:
+    bool better(const Node& a, const Node& b) {
+        if (!a.valid) return false;
+        if (!b.valid) return true;
+
+        if (a.score != b.score) return a.score > b.score;
+
+        return a.ids < b.ids;
+    }
+
     vector<int> maximumWeight(vector<vector<int>>& intervals) {
         int n = intervals.size();
-        vector<IntervalData> sortedIntervals;
-        
+        const int K = 4;
+
+        vector<array<long long, 4>> a(n);
+
         for (int i = 0; i < n; ++i) {
-            sortedIntervals.push_back({intervals[i][1], intervals[i][0], intervals[i][2], i});
+            a[i] = {intervals[i][0], intervals[i][1], intervals[i][2], i};
         }
-        sort(sortedIntervals.begin(), sortedIntervals.end());
-        
-        // dp[i][j] stores a pair: {-max_weight, lexicographically_smallest_indices}
-        vector<vector<pair<long long, vector<int>>>> dp(n + 1, vector<pair<long long, vector<int>>>(5, {0LL, {}}));
-        
+
+        sort(a.begin(), a.end(), [](const auto& x, const auto& y) {
+            return x[1] < y[1];
+        });
+
+        vector<long long> ends(n);
         for (int i = 0; i < n; ++i) {
-            int start = sortedIntervals[i].start;
-            int weight = sortedIntervals[i].weight;
-            int originalIndex = sortedIntervals[i].originalIndex;
-            
-            // lower_bound finds the first interval whose end >= current start
-            IntervalData target = {start, 0, 0, 0}; 
-            int k = lower_bound(sortedIntervals.begin(), sortedIntervals.begin() + i, target) - sortedIntervals.begin();
-            
-            for (int j = 1; j <= 4; ++j) {
-                long long prevWeight = dp[k][j - 1].first;
-                vector<int> prevIndices = dp[k][j - 1].second;
-                
-                pair<long long, vector<int>> skip = dp[i][j];
-                
-                vector<int> takeIndices = prevIndices;
-                takeIndices.push_back(originalIndex);
-                sort(takeIndices.begin(), takeIndices.end());
-                
-                pair<long long, vector<int>> take = {prevWeight - weight, takeIndices};
-                
-                // min() naturally prioritizes the lowest (most negative) weight sum, 
-                // then lexicographically smallest sorted indices
-                dp[i + 1][j] = min(skip, take);
+            ends[i] = a[i][1];
+        }
+
+        vector<vector<Node>> dp(K + 1, vector<Node>(n + 1));
+
+        for (int i = 0; i <= n; ++i) {
+            dp[0][i] = Node(0, {});
+        }
+
+        for (int i = 1; i <= n; ++i) {
+            long long l = a[i - 1][0];
+            long long w = a[i - 1][2];
+            int idx = (int)a[i - 1][3];
+
+            int p = lower_bound(ends.begin(), ends.begin() + (i - 1), l) - ends.begin();
+
+            for (int k = 1; k <= K; ++k) {
+                dp[k][i] = dp[k][i - 1];
+
+                if (dp[k - 1][p].valid) {
+                    vector<int> ids = dp[k - 1][p].ids;
+
+                    ids.push_back(idx);
+
+                    sort(ids.begin(), ids.end());
+
+                    Node take(dp[k - 1][p].score + w, std::move(ids));
+
+                    if (better(take, dp[k][i])) {
+                        dp[k][i] = std::move(take);
+                    }
+                }
             }
         }
-        
-        return dp[n][4].second;
+
+        Node ans;
+
+        for (int k = 1; k <= K; ++k) {
+            if (better(dp[k][n], ans)) {
+                ans = dp[k][n];
+            }
+        }
+
+        return ans.ids;
     }
 };
