@@ -1,10 +1,10 @@
-SELECT d.name AS Department, 
-       e.name AS Employee, 
-       e.salary AS Salary
-FROM Employee e
-JOIN Department d ON e.departmentId = d.id
-WHERE e.salary = (
-    SELECT MAX(salary)
-    FROM Employee
-    WHERE departmentId = e.departmentId
-);
+/* Write your PL/SQL query statement below */
+SELECT DEPT.name AS Department, EMP.name AS Employee, EMP.salary AS 
+
+Salary FROM Department DEPT, Employee EMP WHERE
+
+EMP.departmentId = DEPT.id AND (EMP.departmentId, salary) IN 
+
+(SELECT departmentId, MAX (salary) FROM Employee GROUP BY 
+
+departmentId)
